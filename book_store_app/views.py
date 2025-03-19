@@ -124,6 +124,10 @@ class CustomerListCreateAPIView(APIView):
 # ------------------------------------------------------------
 class CustomerDetailAPIView(APIView):
     def get(self, request, id, format=None):
+        try:
+            customer_id = int(id)
+        except ValueError:
+            return Response({"message": "Illegal, missing, or malformed input"}, status=400)
         # Retrieve the customer by numeric ID; returns 404 if the customer does not exist.
         customer = get_object_or_404(Customer, id=id)
         # Serialize the customer object.

@@ -21,5 +21,5 @@ urlpatterns = [
     
     # Customer endpoints:
     path('customers', CustomerListCreateAPIView.as_view(), name='customer_collection'),
-    path('customers/<int:id>', CustomerDetailAPIView.as_view(), name='customer_detail'),
+    path('customers/<str:id>', CustomerDetailAPIView.as_view(), name='customer_detail'),
 ]
