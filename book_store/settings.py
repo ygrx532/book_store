@@ -87,7 +87,7 @@ DATABASES = {
         "NAME": "bookstore",
         "USER": "root",
         "PASSWORD": "cmu#17647",
-        "HOST": "127.0.0.1",
+        "HOST": "host.docker.internal",
         "PORT": "3306",
     }
 }
