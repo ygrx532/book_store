@@ -1,4 +1,4 @@
-FROM python:3.13.2-slim
+FROM --platform=linux/amd64 python:3.13.2-slim
 
 # Set environment variables to avoid creating .pyc files and to ensure output is flushed immediately
 ENV PYTHONUNBUFFERED 1
@@ -18,6 +18,7 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
+# For installing mysqlclient
 RUN apt-get update && apt-get install -y \
     default-libmysqlclient-dev \
     pkg-config \ 
