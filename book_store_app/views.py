@@ -55,14 +55,14 @@ class BookDetailAPIView(APIView):
         return Response(serializer.data, status=200)
     
     def put(self, request, isbn, format=None):
-        # Retrieve the book that is going to be updated; return 404 if it doesn't exist.
-        book = get_object_or_404(Book, ISBN=isbn)
         # Ensure that the ISBN in the request body matches the ISBN in the URL.
         if request.data.get('ISBN') != isbn:
             return Response(
                 {"message": "ISBN in URL and body do not match"},
                 status=400
             )
+        # Retrieve the book that is going to be updated; return 404 if it doesn't exist.
+        book = get_object_or_404(Book, ISBN=isbn)
         # Instantiate the serializer with the existing book instance and new data.
         serializer = BookSerializer(book, data=request.data)
         # Validate the new data.
@@ -99,6 +99,11 @@ class CustomerListCreateAPIView(APIView):
             # Return the serialized customer data with HTTP status 201 and the Location header.
             return Response(serializer.data, status=201, headers=headers)
         # Return error response if input data is invalid.
+        if serializer.errors.get('userId') == ["Invalid email address."]:
+            return Response(
+                {"message": "Invalid email address."},
+                status=400
+            )
         return Response(
             {"message": "Illegal, missing, or malformed input", "errors": serializer.errors},
             status=400
