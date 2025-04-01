@@ -2,6 +2,7 @@
 from rest_framework import serializers
 from decimal import Decimal, InvalidOperation
 from .models import Book, Customer
+from django.core.validators import validate_email
 import re
 
 
@@ -38,7 +39,7 @@ class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
         fields = '__all__'
-    
+
     def validate_userId(self, value):
         try:
             validate_email(value)
