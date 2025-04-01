@@ -18,13 +18,7 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# For installing mysqlclient
-RUN apt-get update && apt-get install -y \
-    default-libmysqlclient-dev \
-    pkg-config \ 
-    && rm -rf /var/lib/apt/lists/*
-
-EXPOSE 8000
+EXPOSE 80
 
 # Set the working directory in the container
 WORKDIR /app
@@ -40,4 +34,4 @@ RUN pip install -r requirements.txt
 COPY . .
 
 # Run the application
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD []
