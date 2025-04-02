@@ -30,12 +30,6 @@ class CustomerListCreateAPIView(APIView):
             headers = {'Location': location}
             # Return the serialized customer data with HTTP status 201 and the Location header.
             return Response(serializer.data, status=201, headers=headers)
-        # Return error response if input data is invalid.
-        if serializer.errors.get('userId') == ["Invalid email address."]:
-            return Response(
-                {"message": "Invalid email address."},
-                status=400
-            )
         return Response(
             {"message": "Illegal, missing, or malformed input", "errors": serializer.errors},
             status=400

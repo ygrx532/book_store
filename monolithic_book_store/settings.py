@@ -91,7 +91,7 @@ DATABASES = {
         "NAME": "bookstore",
         "USER": "yuyangx2",
         "PASSWORD": "cmu17647",
-        "HOST": "bookstore-db-dev.cluster-cpugmk0q0xhc.us-east-1.rds.amazonaws.com",
+        "HOST": "localhost",
         "PORT": "3306",
     }
 }

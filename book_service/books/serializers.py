@@ -1,9 +1,8 @@
-# serializers.py
-from rest_framework import serializers
 from decimal import Decimal, InvalidOperation
-from .models import Book, Customer
+from rest_framework import serializers
 from django.core.validators import validate_email
 import re
+from .models import Book
 
 class ExactTwoDecimalField(serializers.DecimalField):
     def to_internal_value(self, data):
