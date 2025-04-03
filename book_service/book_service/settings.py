@@ -25,7 +25,13 @@ SECRET_KEY = 'django-insecure-9n(9ze+j8-5o+x+)6m%(h^@hch%)*2=0azgik^&29xcimxp%78
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "internal-bookstore-dev-InternalALB-1681681316.us-east-1.elb.amazonaws.com",
+    "10.0.0.67",
+    "10.0.20.231",
+    "10.0.0.63",
+    "10.0.20.50",
+]
 
 
 # Application definition
@@ -86,9 +92,9 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
         "NAME": "bookstore",
-        "USER": "root",
-        "PASSWORD": "cmu#17647",
-        "HOST": "localhost",
+        "USER": "yuyangx2",
+        "PASSWORD": "cmu17647",
+        "HOST": "bookstore-db-dev.cluster-czcekk20krmh.us-east-1.rds.amazonaws.com",
         "PORT": "3306",
     }
 }
