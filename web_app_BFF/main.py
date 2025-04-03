@@ -113,7 +113,7 @@ async def get_books_by_isbn(isbn: str, _=Depends(validate_jwt_token), __=Depends
     """
     async with httpx.AsyncClient() as client:
         try:
-            response = await client.get(f"{BASE_URL}/books/", params={"isbn": isbn} )
+            response = await client.get(f"{BASE_URL}/books/isbn/{isbn}")
             response.raise_for_status()
         except httpx.HTTPError as exc:
             error_body = exc.response.json()
