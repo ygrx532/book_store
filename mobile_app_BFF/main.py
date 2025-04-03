@@ -26,7 +26,10 @@ ACCEPTED_USERS = {"starlord", "gamora", "drax", "rocket", "groot"}
 REQUIRED_ISSUER = "cmu.edu"
 JWT_ALGORITHM = "HS256"
 
-def validate_jwt_token(authorization: str = Header(...)):
+def validate_jwt_token(authorization: Optional[str] = Header(None)):
+    if authorization is None:
+        raise HTTPException(status_code=401, detail="Missing Authorization header")
+    
     if not authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Authorization header must start with 'Bearer '")
 
