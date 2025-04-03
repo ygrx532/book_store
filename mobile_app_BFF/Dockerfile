@@ -10,11 +10,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Install python and mysqlclient
+# Install python
 RUN apt-get update && apt-get install -y \
     pkg-config \
     python3-dev \
-    default-libmysqlclient-dev \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
@@ -34,4 +33,4 @@ RUN pip install -r requirements.txt
 COPY . .
 
 # Run the application
-CMD []
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]

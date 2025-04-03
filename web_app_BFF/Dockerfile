@@ -13,18 +13,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install python and mysqlclient
 RUN apt-get update && apt-get install -y \
     pkg-config \
-    python3-dev \
     default-libmysqlclient-dev \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# For installing mysqlclient
-RUN apt-get update && apt-get install -y \
-    default-libmysqlclient-dev \
-    pkg-config \ 
-    && rm -rf /var/lib/apt/lists/*
-
-EXPOSE 3000
+EXPOSE 80
 
 # Set the working directory in the container
 WORKDIR /app
@@ -40,4 +33,4 @@ RUN pip install -r requirements.txt
 COPY . .
 
 # Run the application
-CMD ["python", "manage.py", "runserver", "0.0.0.0:3000"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -178,8 +177,3 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
-=======
-__pycache__
-book_store_app/__pycache__
-.DS_Store
->>>>>>> cloud-deploy
