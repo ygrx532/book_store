@@ -1,5 +1,7 @@
 # Import necessary modules and classes:
-from django.http import HttpResponse
+import json
+from confluent_kafka import Producer
+from django.conf import settings
 from rest_framework.views import APIView             # Base class for our API views
 from rest_framework.response import Response         # DRF Response for returning data in JSON format
 from rest_framework import status                   # Provides HTTP status code constants (optional use)
@@ -13,6 +15,34 @@ from .serializers import CustomerSerializer  # Import serializers for data valid
 # API View for handling customer creation and lookup by userId (POST and GET /customers)
 # ------------------------------------------------------------
 class CustomerListCreateAPIView(APIView):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        # Kafka Producer Configuration
+        brokers = '3.129.102.184:9092,18.118.230.221:9093,3.130.6.49:9094'
+        self.producer = Producer({
+            'bootstrap.servers': brokers,  # Use a placeholder for Kafka brokers
+        })
+
+    def _send_customer_event_to_kafka(self, customer):
+        # Create the message in JSON format
+        customer_data = {
+            "userId": customer.userId,
+            "name": customer.name,
+            "phone": customer.phone,
+            "address": customer.address,
+            "address2": customer.address2,
+            "city": customer.city,
+            "state": customer.state,
+            "zipcode": customer.zipcode,
+        }
+
+        # Serialize the message to JSON
+        message = json.dumps(customer_data)
+
+        # Send the message to the Kafka topic
+        self.producer.produce('yuyangx2.customer.evt', value=message)
+        self.producer.flush()  # Ensure the message is sent
+        
     def post(self, request, format=None):
         # Instantiate the serializer with incoming customer data.
         serializer = CustomerSerializer(data=request.data)
@@ -28,8 +58,13 @@ class CustomerListCreateAPIView(APIView):
             # Build the URL for retrieving the new customer by their ID.
             location = request.build_absolute_uri(reverse('customer_detail', args=[customer.id]))
             headers = {'Location': location}
+
+            # Send a Kafka message to the customer.evt topic
+            self._send_customer_event_to_kafka(customer)
+
             # Return the serialized customer data with HTTP status 201 and the Location header.
             return Response(serializer.data, status=201, headers=headers)
+
         return Response(
             {"message": "Illegal, missing, or malformed input", "errors": serializer.errors},
             status=400
