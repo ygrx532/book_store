@@ -21,7 +21,7 @@ spec:
         - containerPort: 3000
         livenessProbe:
           httpGet:
-            path: /health
+            path: /books/status
             port: 3000
           initialDelaySeconds: 5
           periodSeconds: 10

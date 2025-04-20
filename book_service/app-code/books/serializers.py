@@ -1,6 +1,5 @@
 from decimal import Decimal, InvalidOperation
 from rest_framework import serializers
-from django.core.validators import validate_email
 import re
 from .models import Book
 
