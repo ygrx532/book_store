@@ -26,12 +26,14 @@ SECRET_KEY = 'django-insecure-kikdc2)7%=rkveaz9x+rv67_ty4y2*7o$)fq=f8tb#2#wopiyc
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    "localhost",
-    "internal-bookstore-dev-InternalALB-1681681316.us-east-1.elb.amazonaws.com",
-    "10.0.0.67",
-    "10.0.20.231",
-    "10.0.0.63",
-    "10.0.20.50",
+    'book-service',
+    'customer-service',
+    'web-app-bff',
+    'mobile-app-bff',
+    'localhost',
+    '127.0.0.1',
+    '0.0.0.0',
+    '[::1]',
 ]
 
 
@@ -94,7 +96,7 @@ DATABASES = {
         "NAME": "bookstore",
         "USER": "yuyangx2",
         "PASSWORD": "cmu17647",
-        "HOST": "bookstore-db-dev.cluster-czcekk20krmh.us-east-1.rds.amazonaws.com",
+        "HOST": "bookstore-db-dev.cluster-cvkgrtjw6hvn.us-east-1.rds.amazonaws.com",
         "PORT": "3306",
     }
 }
