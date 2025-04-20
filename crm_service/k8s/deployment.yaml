@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: crm_service
+  name: crm-service
   namespace: bookstore-ns
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: crm_service
+      app: crm-service
   template:
     metadata:
       labels:
-        app: crm_service
+        app: crm-service
     spec:
       containers:
-      - name: crm_service
-        image: ygrx532/crm_service:latest
+      - name: crm-service
+        image: ygrx532/crm-service:latest
         ports:
         - containerPort: 3000
         livenessProbe:
