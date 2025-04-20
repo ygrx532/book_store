@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: customer-service
+  name: customer_service
   namespace: bookstore-ns
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: customer-service
+      app: customer_service
   template:
     metadata:
       labels:
-        app: customer-service
+        app: customer_service
     spec:
       containers:
-      - name: customer-service
-        image: ygrx532/customer-service:latest
+      - name: customer_service
+        image: ygrx532/customer_service:latest
         ports:
         - containerPort: 3000
         livenessProbe:

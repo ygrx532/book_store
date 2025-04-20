@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: customer-service
+  name: customer_service
   namespace: bookstore-ns
 spec:
   selector:
-    app: customer-service
+    app: customer_service
   ports:
     - port: 3000
       targetPort: 3000

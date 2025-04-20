@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: book-service
+  name: book_service
   namespace: bookstore-ns
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: book-service
+      app: book_service
   template:
     metadata:
       labels:
-        app: book-service
+        app: book_service
     spec:
       containers:
-      - name: book-service
-        image: ygrx532/book-service:latest
+      - name: book_service
+        image: ygrx532/book_service:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 3000

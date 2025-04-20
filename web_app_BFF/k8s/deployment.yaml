@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mobile-app-bff
+  name: web_app_bff
   namespace: bookstore-ns
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: mobile-app-bff
+      app: web_app_bff
   template:
     metadata:
       labels:
-        app: mobile-app-bff
+        app: web_app_bff
     spec:
       containers:
-      - name: mobile-app-bff
-        image: ygrx532/mobile-app-bff:latest
+      - name: web_app_bff
+        image: ygrx532/web_app_bff:latest
         ports:
         - containerPort: 3000
         livenessProbe:
