@@ -141,6 +141,24 @@ async def update_book(isbn: str, book: dict, _=Depends(validate_jwt_token), __=D
             ) from exc
         return response.json()
 
+@app.get("/books/{isbn}/related-books")
+async def get_related_books(isbn: str, _=Depends(validate_jwt_token), __=Depends(require_client_type)):
+    """
+    Proxy GET request to retrieve related books by ISBN.
+    This calls the Django BookRelatedAPIView at /books/<isbn>/related-books.
+    """
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.get(f"{BOOK_SERVICE_URL}/books/{isbn}/related-books")
+            response.raise_for_status()
+        except httpx.HTTPError as exc:
+            error_body = exc.response.json()
+            raise HTTPException(
+                status_code=response.status_code if response is not None else 500,
+                detail=error_body
+            ) from exc
+        return response.json()
+
 # ---------------------------
 # Customer Endpoints
 # ---------------------------
@@ -207,7 +225,7 @@ async def get_customer_detail(id: str, _=Depends(validate_jwt_token), __=Depends
 # ---------------------------
 
 @app.get("/status")
-async def status(_=Depends(validate_jwt_token), __=Depends(require_client_type)):
+async def status():
     """
     Health check endpoint.
     Proxies the status call to the Book Service's /status endpoint.

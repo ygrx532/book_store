@@ -86,7 +86,7 @@ class BookDetailAPIView(APIView):
 # Circuit‑breaker parameters
 # ---------------------------------------------------------------------------
 CIRCUIT_FILE       = Path("/tmp/related_books_circuit.json")   # mount an emptyDir here in K8S
-RECOMMEND_SERVICE_URL = "http://3.130.6.49"                # external service URL
+RECOMMEND_SERVICE_URL = "3.130.6.49"                # external service URL
 OPEN_INTERVAL_SECS = 60                                        # stay OPEN for 60 s
 REQUEST_TIMEOUT    = 3                                         # external call timeout
 
