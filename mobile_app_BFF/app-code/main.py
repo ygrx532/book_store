@@ -1,4 +1,4 @@
-from fastapi import Header, FastAPI, HTTPException, Query, Depends
+from fastapi import Header, FastAPI, HTTPException, Query, Depends, Response
 from fastapi.responses import JSONResponse
 import httpx
 from jose import jwt
@@ -145,6 +145,49 @@ async def update_book(isbn: str, book: dict, _=Depends(validate_jwt_token), __=D
             ) from exc
         return response.json()
 
+@app.get("/books/{isbn}/related-books")
+async def get_related_books(isbn: str, _=Depends(validate_jwt_token), __=Depends(require_client_type)):
+    """
+    Proxy GET request to retrieve related books by ISBN.
+    This calls the Django BookRelatedAPIView at /books/<isbn>/related-books.
+    """
+    async with httpx.AsyncClient() as client:
+        # 1) Fetch
+        response = await client.get(f"{BOOK_SERVICE_URL}/books/{isbn}/related-books")
+
+        # 2) Handle 204 No Content up front
+        if response.status_code == 204:
+            return Response(status_code=204)
+
+        # 3) Raise for any 4xx/5xx
+        try:
+            response.raise_for_status()
+        except httpx.HTTPStatusError as exc:
+            status = exc.response.status_code
+
+            # forward 503 and 504 as is
+            if status in {503, 504}:
+                return JSONResponse(status_code=status, content={"detail": str(status)})
+
+            # other errors → try to pull JSON body, else fallback to text
+            try:
+                err = exc.response.json()
+            except Exception:
+                err = {"detail": exc.response.text.strip() or str(status)}
+
+            raise HTTPException(status_code=status, detail=err)
+
+        # 4) 200 OK → parse JSON
+        try:
+            return response.json()
+        except Exception:
+            # this should never happen if upstream is well‑behaved
+            return JSONResponse(
+                status_code=500,
+                content={"detail": "Invalid JSON from Book Service"},
+            )
+
+
 # ---------------------------
 # Customer Endpoints
 # ---------------------------
@@ -217,7 +260,7 @@ async def get_customer_detail(id: str, _=Depends(validate_jwt_token), __=Depends
 # ---------------------------
 
 @app.get("/status")
-async def status(_=Depends(validate_jwt_token), __=Depends(require_client_type)):
+async def status():
     """
     Health check endpoint.
     Proxies the status call to the Book Service's /status endpoint.

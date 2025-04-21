@@ -6,11 +6,15 @@ from confluent_kafka import Consumer, KafkaException, KafkaError
 
 # Kafka Consumer Configuration
 brokers = '3.129.102.184:9092,18.118.230.221:9093,3.130.6.49:9094'
+print("[DEBUG] (1) Attempting to connect to Kafka brokers...")
+
 consumer = Consumer({
-    'bootstrap.servers': brokers,  # Use a placeholder for Kafka brokers
+    'bootstrap.servers': brokers,
     'group.id': 'crm-consumer-group',
-    'auto.offset.reset': 'earliest',  # Consume from the beginning
+    'auto.offset.reset': 'earliest',
 })
+
+print("[DEBUG] (1) Connected to Kafka brokers.")
 
 # Email Configuration
 SMTP_SERVER = 'smtp.gmail.com'
@@ -32,23 +36,25 @@ def send_email(to_email, customer_name):
     msg['To'] = to_email
     msg['Subject'] = subject
     msg.attach(MIMEText(body, 'plain'))
+
+    print(f"[DEBUG] (5) Attempting to send email to {to_email}...")
     
-    # Send the email
     try:
         with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
-            server.starttls()  # Encrypt connection
+            server.starttls()
             server.login(SMTP_USERNAME, SMTP_PASSWORD)
             server.sendmail(SMTP_USERNAME, to_email, msg.as_string())
-            print(f"Email sent to {to_email}")
+            print(f"[DEBUG] (5) Email sent successfully to {to_email}")
     except Exception as e:
-        print(f"Error sending email: {str(e)}")
+        print(f"[ERROR] Failed to send email to {to_email}: {str(e)}")
 
 def consume_kafka_messages():
+    print("[DEBUG] Subscribing to topic 'yuyangx2.customer.evt'...")
     consumer.subscribe(['yuyangx2.customer.evt'])
 
     try:
         while True:
-            msg = consumer.poll(1.0)  # Poll for messages for up to 1 second
+            msg = consumer.poll(1.0)
             if msg is None:
                 continue
             if msg.error():
@@ -56,20 +62,32 @@ def consume_kafka_messages():
                     continue
                 else:
                     raise KafkaException(msg.error())
+
+            print("[DEBUG] (4) Received event message from Kafka.")
             
             # Deserialize the message value
-            message_data = json.loads(msg.value().decode('utf-8'))
-            customer_name = message_data['name']
-            customer_email = message_data['userId']  # Assuming userId is the email
+            try:
+                message_data = json.loads(msg.value().decode('utf-8'))
+                print(f"[DEBUG] Raw message: {message_data}")
+            except Exception as e:
+                print(f"[ERROR] Failed to parse message: {str(e)}")
+                continue
 
-            # Send an email to the newly registered customer
+            customer_name = message_data['name']
+            customer_email = message_data['userId']
+
+            print(f"[DEBUG] (4) Parsed customer name: {customer_name}, email: {customer_email}")
+
+            # Send email to the customer
             send_email(customer_email, customer_name)
 
     except KeyboardInterrupt:
-        pass
+        print("[INFO] Shutting down consumer...")
     finally:
         consumer.close()
+        print("[INFO] Kafka consumer connection closed.")
 
-# Start consuming messages in the background
+# Main entry point
 if __name__ == "__main__":
+    print("[INFO] Starting CRM consumer service...")
     consume_kafka_messages()
