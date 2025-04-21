@@ -17,10 +17,10 @@ spec:
       - name: web-app-bff
         image: ygrx532/web-app-bff:latest
         ports:
-        - containerPort: 3000
+        - containerPort: 80
         livenessProbe:
           httpGet:
             path: /status
-            port: 3000
+            port: 80
           initialDelaySeconds: 5
           periodSeconds: 10
