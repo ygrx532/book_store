@@ -23,5 +23,5 @@ spec:
           httpGet:
             path: /books/status
             port: 3000
-          initialDelaySeconds: 5
-          periodSeconds: 10
+          initialDelaySeconds: 20
+          periodSeconds: 20
