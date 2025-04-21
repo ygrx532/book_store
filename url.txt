@@ -1,1 +1,4 @@
-http://bookstore-dev-ExternalALB-1066565532.us-east-1.elb.amazonaws.com:80
+a143a6f312983465da104bf787069fbd-1915444002.us-east-1.elb.amazonaws.com:80
+a713e564de33b4d45b1dd4f668d251a7-1458926067.us-east-1.elb.amazonaws.com:80
+yuyangx2
+e30254865@gmail.com
